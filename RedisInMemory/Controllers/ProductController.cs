@@ -25,6 +25,13 @@ namespace RedisInMemory.Controllers
 
                 //SlidingExpiration = Verilen süre sonunda eğer ki yenilenmez ise ölür. Kullanılırsa süre her seferinde uzamaya devam eder
                 options.SlidingExpiration = TimeSpan.FromSeconds(10);
+                //Data Önceliği
+                options.Priority = CacheItemPriority.High;
+
+                //cache silindiğinde çalışır datanın memory den neden silindiğinin bilinmesi için kullanılır. 
+                options.RegisterPostEvictionCallback((key,value,reason,state)=>{
+                    _memoryCache.Set("callback", $"{key}->{value}-> sebep:{reason}");
+                });
                 _memoryCache.Set<string>("newsDate", DateTime.Now.ToString(),options);
             }
             //Değer varsa view e ekler
