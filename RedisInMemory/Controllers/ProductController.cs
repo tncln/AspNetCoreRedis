@@ -16,10 +16,16 @@ namespace RedisInMemory.Controllers
         }
         public IActionResult Index()
         {
-            //Deger varsa olmaya çalışır yoksa değeri cache e set eder. 
+            //Deger varsa oku maya çalışır yoksa değeri cache e set eder. 
             if (!_memoryCache.TryGetValue("newsDate",out string newscache))
             {
-                _memoryCache.Set<string>("newsDate", DateTime.Now.ToString());
+                MemoryCacheEntryOptions options = new MemoryCacheEntryOptions();
+                //AbsoluteExpiration = verilen süre sonunda cache ölür
+                options.AbsoluteExpiration = DateTime.Now.AddSeconds(30);
+
+                //SlidingExpiration = Verilen süre sonunda eğer ki yenilenmez ise ölür. Kullanılırsa süre her seferinde uzamaya devam eder
+                options.SlidingExpiration = TimeSpan.FromSeconds(10);
+                _memoryCache.Set<string>("newsDate", DateTime.Now.ToString(),options);
             }
             //Değer varsa view e ekler
             ViewBag.newsDate = newscache;
