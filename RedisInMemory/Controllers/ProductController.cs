@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Caching.Memory;
+using RedisInMemory.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -36,6 +37,9 @@ namespace RedisInMemory.Controllers
             }
             //Değer varsa view e ekler
             ViewBag.newsDate = newscache;
+
+            Product product = new Product { Id = 1, Name = "macbook", Price = 1200 };
+            _memoryCache.Set<Product>("product:1", product);
 
             return View();
         }
