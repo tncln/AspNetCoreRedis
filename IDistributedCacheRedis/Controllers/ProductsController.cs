@@ -5,6 +5,7 @@ using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 using System.Threading.Tasks;
 
 namespace IDistributedCacheRedis.Controllers
@@ -27,6 +28,11 @@ namespace IDistributedCacheRedis.Controllers
             Product product = new Product { Id=1, Name="Kalem" , Price=100 };
             string jsonProduct = JsonConvert.SerializeObject(product);
 
+            //BinarySerialize İşlemi 
+            Byte[] byteProduct = Encoding.UTF8.GetBytes(jsonProduct);
+            _distributedCache.Set("productBinary:1", byteProduct);
+
+            //JsonConvert ile ekleme
             await _distributedCache.SetStringAsync("product:1", jsonProduct,cacheEntryOptions);
 
             return View();
@@ -35,7 +41,12 @@ namespace IDistributedCacheRedis.Controllers
         {
             //string name = _distributedCache.GetString("name");
 
-            string jsonproduct = _distributedCache.GetString("product:1");
+            //Binary Deserialize
+            Byte[] byteProduct = _distributedCache.Get("productBinary:1");
+            string jsonproduct = Encoding.UTF8.GetString(byteProduct);
+
+            //JsonConvert Deserialize
+             jsonproduct = _distributedCache.GetString("product:1");
             Product p = JsonConvert.DeserializeObject<Product>(jsonproduct);  
             return View();
         }
