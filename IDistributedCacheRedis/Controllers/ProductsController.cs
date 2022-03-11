@@ -33,7 +33,10 @@ namespace IDistributedCacheRedis.Controllers
         }
         public IActionResult Show()
         {
-            string name = _distributedCache.GetString("name");
+            //string name = _distributedCache.GetString("name");
+
+            string jsonproduct = _distributedCache.GetString("product:1");
+            Product p = JsonConvert.DeserializeObject<Product>(jsonproduct);  
             return View();
         }
         public IActionResult Remove()
