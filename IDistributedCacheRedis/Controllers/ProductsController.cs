@@ -4,6 +4,7 @@ using Microsoft.Extensions.Caching.Distributed;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -54,6 +55,21 @@ namespace IDistributedCacheRedis.Controllers
         {
             _distributedCache.Remove("name");
             return View();
+        }
+        public IActionResult ImageCache()
+        {
+            //image byte dönüştürme işlemi
+            string path = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/img/agac1.jpg");
+            byte[] imageByte = System.IO.File.ReadAllBytes(path);
+
+            _distributedCache.Set("resim", imageByte);
+            return View();
+        }
+        public IActionResult ImageUrl()
+        {
+            byte[] resimByte = _distributedCache.Get("resim");
+
+            return File(resimByte,"image/jpg");
         }
     }
 }
