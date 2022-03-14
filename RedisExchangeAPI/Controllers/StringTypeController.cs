@@ -19,6 +19,10 @@ namespace RedisExchangeAPI.Controllers
         }
         public IActionResult Index()
         {
+            //string resim kaydetme
+            Byte[] resimbyte = default(byte[]);
+            db.StringSet("resim", resimbyte);
+
             //String Veri Tabanına Yazma
             db.StringSet("name", "Adem Tunçalın");
             db.StringSet("count", 10);
