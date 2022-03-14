@@ -21,7 +21,7 @@ namespace RedisExchangeAPI.Controllers
         {
             //String Veri Tabanına Yazma
             db.StringSet("name", "Adem Tunçalın");
-            db.StringSet("name", "Ali Veli");
+            db.StringSet("count", 10);
             return View();
         }
         public IActionResult Show()
@@ -29,6 +29,8 @@ namespace RedisExchangeAPI.Controllers
             var value= db.StringGet("name");
             if (value.HasValue)
             {
+                //Otomatik artırma, count değer her okunduğunda 1 artar. 
+                db.StringIncrement("count", 1);
                 ViewBag.value = value.ToString();
             }
             return View();
