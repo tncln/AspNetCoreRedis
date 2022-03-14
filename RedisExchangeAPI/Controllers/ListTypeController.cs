@@ -19,6 +19,13 @@ namespace RedisExchangeAPI.Controllers
         }
         public IActionResult Index()
         {
+            List<string> namesList = new List<string>();
+            if (db.KeyExists("list"))
+            {
+                db.ListRange("List").ToList().ForEach(x=> {
+                    namesList.Add(x.ToString());
+                });
+            }
             return View();
         }
         [HttpPost]
